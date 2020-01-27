@@ -15,7 +15,7 @@
     <pre><code id="document-errors"></code></pre>
   </div>
   <iframe id="result" style="width: 100%; height: 100%; border: none; background-color: white;"
-    src="/html/template"></iframe>
+    src="{{appBasePath}}/html/template"></iframe>
 </div>
 
 <style>
@@ -99,10 +99,10 @@
 
     switch(e.detail) {
       case 'html':
-        iframe.contentWindow.location = '/html/template';
+        iframe.contentWindow.location = '{{appBasePath}}/html/template';
         break;
       case 'markdown':
-        iframe.contentWindow.location = '/markdown/template';
+        iframe.contentWindow.location = '{{appBasePath}}/markdown/template';
         break;
     }
   });

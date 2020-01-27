@@ -1,10 +1,10 @@
 <div id="App">
   {{> topbar embedded=embedded }}
-  {{~> left-pane app='#App' ~}}
-  {{> right-pane app='#App' }}
+  {{~> left-pane app='#App' appBasePath=appBasePath ~}}
+  {{> right-pane app='#App' appBasePath=appBasePath }}
 
   <div id="convert-dialog" class="hidden">
-    <img src="/img/rocket-launch.png">
+    <img src="{{appBasePath}}/img/rocket-launch.png">
     <h2>Convert to 2.0.0-rc2</h2>
     <p>Your document is using an old version of AsyncAPI. The playground only supports 2.0.0-rc2 and above. Convert your
       document to continue.</p>
@@ -45,6 +45,7 @@
 </style>
 
 <script>
+  var basePath = '{{appBasePath}}'
   window.addEventListener('load', () => {
     const App = document.getElementById('App');
 
@@ -55,7 +56,7 @@
 
     function generate() {
       superagent
-        .post(`/${state.template}/generate`)
+        .post(`${basePath}/${state.template}/generate`)
         .send(state.code)
         .set('Accept', 'text/plain')
         .set('Content-Type', 'text/plain')
@@ -78,9 +79,13 @@
           }
 
           var result = res.text;
+          result = result.replace("<head>", "<head><base href=\"" + window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + basePath + "/html/template/\" />")
+          
+          console.log(result);
 
           document.querySelector('.errors-wrapper').classList.add('errors-wrapper--hidden');
           document.getElementById('result').contentWindow.postMessage({
+            
             eventName: 'content',
             content: result,
           }, '*');
@@ -97,7 +102,7 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('load')) {
-      fetch(urlParams.get('load'))
+      fetch(`${basePath}${urlParams.get('load')}`)
         .then(function (response) {
           if (!response.ok) throw new Error(response.statusText);
           return response.text();
@@ -123,7 +128,7 @@
     App.addEventListener('downloadDocs', () => {
       var form = document.createElement('form');
       form.setAttribute('method', 'post');
-      form.setAttribute('action', `/${state.template}/download`);
+      form.setAttribute('action', `${basePath}/${state.template}/download`);
       form.setAttribute('style', 'display: none;');
 
       var text = document.createElement('textarea');
@@ -138,7 +143,7 @@
 
     document.querySelector('.js-convert').addEventListener('click', function () {
       superagent
-        .post('/convert')
+        .post(`${basePath}/convert`)
         .send(state.code)
         .set('Accept', 'text/plain')
         .set('Content-Type', 'text/plain')

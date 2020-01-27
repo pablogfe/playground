@@ -18,6 +18,11 @@ npm start
 
 and go to [http://localhost:5000]().
 
+## Environment Variables
+
+- **PORT**: set the server port
+- **APP_BASE_PATH**: set the basepath of the app (i.e. /asyncapipg)
+
 ## Build docker image
 
 ```

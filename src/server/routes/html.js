@@ -4,8 +4,20 @@ const router = express.Router();
 const AsyncAPIGenerator = require('asyncapi-generator');
 const archiver = require('archiver');
 const version = require('../middlewares/version');
+const config = require('../lib/config');
+const appBasePath = require('../appBasePath.js');
 
 module.exports = router;
+
+router.get(`/template`, (req, res) => {
+  res.render('app', {
+    ...config.views,
+    layout: 'html',
+    ...{
+      appBasePath,
+    }
+  });
+});
 
 router.post('/generate', version, async (req, res) => {
   try {
